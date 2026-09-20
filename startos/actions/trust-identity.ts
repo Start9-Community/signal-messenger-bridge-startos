@@ -52,26 +52,20 @@ const inputSpec = InputSpec.of({
   identity: Value.dynamicSelect(async ({ effects }) => {
     const values: Record<string, string> = {}
 
-    // An identity list that fails shouldn't render a broken form. Fall through
-    // to the empty state; the handler explains it.
-    try {
-      const accounts = await listAccounts(effects)
-      const multiple = accounts.length > 1
+    const accounts = await listAccounts(effects)
+    const multiple = accounts.length > 1
 
-      for (const account of accounts) {
-        const identities = await listIdentities(effects, account)
-        for (const identity of identities) {
-          // A contact known only by UUID has no number; trust accepts either.
-          const contact = identity.number || identity.uuid
-          if (!contact) continue
-          const label = `${contact} · ${identity.status}`
-          values[packIdentity(account, contact)] = multiple
-            ? `${label} (${account})`
-            : label
-        }
+    for (const account of accounts) {
+      const identities = await listIdentities(effects, account)
+      for (const identity of identities) {
+        // A contact known only by UUID has no number; trust accepts either.
+        const contact = identity.number || identity.uuid
+        if (!contact) continue
+        const label = `${contact} · ${identity.status}`
+        values[packIdentity(account, contact)] = multiple
+          ? `${label} (${account})`
+          : label
       }
-    } catch {
-      // Leave `values` empty.
     }
 
     if (Object.keys(values).length === 0) {

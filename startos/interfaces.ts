@@ -19,10 +19,8 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     protocol: 'http',
     // The upstream image ships no authentication of any kind, so this gate is
     // the only thing between the network and full control of the linked Signal
-    // account. Bearer auth is enforced at the StartOS reverse proxy: outside
-    // clients must send `Authorization: Bearer <token>` or get 401 before
-    // reaching the container. Same-box dependents bypass it by dialing the
-    // container's bridge IP directly — that path doesn't traverse the proxy.
+    // account. Same-box dependents resolve the binding's plaintext bridge leg,
+    // which does not traverse this TLS proxy.
     addSsl: {
       auth: { type: 'bearer', tokens, realm: 'Signal Messenger Bridge' },
     },
@@ -35,7 +33,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
       'Token-authenticated REST and WebSocket API for sending and receiving Signal messages',
     ),
     type: 'api',
-    masked: false,
+    masked: true,
     schemeOverride: null,
     username: null,
     path: '',
