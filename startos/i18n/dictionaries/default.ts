@@ -13,9 +13,6 @@ const dict = {
   'Token-authenticated REST and WebSocket API for sending and receiving Signal messages': 2,
   'Signal API is ready': 3,
   'Signal API is not ready': 4,
-  // the signal-cli daemon's ready stub — display: null, so log-only
-  'Not observable from outside the container': 109,
-
   // action groups
   General: 5,
   'Danger Zone': 101,
@@ -137,6 +134,32 @@ const dict = {
   'This service holds no Signal data.': 106,
   'Signal Data Deleted': 107,
   'Run Link Signal Account to join an account again. Note that this service may still be listed under Settings → Linked devices in Signal — deleting its data here does not remove it there, so remove it on your phone to free the device slot.': 108,
+
+  // 109 retired with the internal signal-cli readiness stub.
+
+  // API key actions
+  'Create API Key': 110,
+  'Generate a bearer token for an outside client of the Signal API.': 111,
+  'An API key with this label already exists.': 112,
+  'API Key Created': 113,
+  'Copy this token now. It will not be shown again.': 114,
+  'Revoke API Key': 115,
+  'Stop an outside client from using the Signal API.': 116,
+  'No API keys to revoke': 117,
+  'API Key': 118,
+  'Select the key to revoke.': 119,
+  'Nothing to Revoke': 120,
+  'This service has no API keys.': 121,
+  'The selected API key no longer exists.': 122,
+  'API Key Revoked': 123,
+  'The selected key no longer grants access.': 124,
+
+  // action API errors
+  'Could not reach the Signal API': 125,
+  'Signal API returned an error': 126,
+  'Signal API returned a non-JSON response': 127,
+  'The Signal API returned no device link.': 128,
+  'The label must contain a visible character.': 129,
 } as const
 
 /**

@@ -1,4 +1,5 @@
 import { T } from '@start9labs/start-sdk'
+import { i18n } from './i18n'
 import { port } from './utils'
 
 /**
@@ -48,20 +49,22 @@ async function signalGet<R>(effects: T.Effects, path: string): Promise<R> {
     })
   } catch (err) {
     throw new Error(
-      `Could not reach the Signal API at ${url}: ${(err as Error).message}`,
+      `${i18n('Could not reach the Signal API')}: ${(err as Error).message}`,
     )
   }
 
   const body = await res.text()
   if (!res.ok) {
-    throw new Error(`Signal API returned ${res.status}: ${errorDetail(body)}`)
+    throw new Error(
+      `${i18n('Signal API returned an error')} (${res.status}): ${errorDetail(body)}`,
+    )
   }
 
   try {
     return JSON.parse(body) as R
   } catch {
     throw new Error(
-      `Signal API returned a non-JSON body (${res.status}): ${body.slice(0, 300)}`,
+      `${i18n('Signal API returned a non-JSON response')} (${res.status}): ${body.slice(0, 300)}`,
     )
   }
 }
@@ -86,13 +89,13 @@ async function signalPut(
     })
   } catch (err) {
     throw new Error(
-      `Could not reach the Signal API at ${url}: ${(err as Error).message}`,
+      `${i18n('Could not reach the Signal API')}: ${(err as Error).message}`,
     )
   }
 
   if (!res.ok) {
     throw new Error(
-      `Signal API returned ${res.status}: ${errorDetail(await res.text())}`,
+      `${i18n('Signal API returned an error')} (${res.status}): ${errorDetail(await res.text())}`,
     )
   }
 }
@@ -257,7 +260,7 @@ export async function deviceLinkUri(
   )
   const uri = res.device_link_uri?.trim()
   if (!uri) {
-    throw new Error('The Signal API returned no device link.')
+    throw new Error(i18n('The Signal API returned no device link.'))
   }
   return uri
 }

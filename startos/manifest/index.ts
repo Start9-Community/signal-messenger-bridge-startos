@@ -7,10 +7,11 @@ export const manifest = setupManifest({
   id: 'signal-messenger-bridge',
   title: 'Signal Messenger Bridge',
   license: 'MIT',
-  packageRepo: 'https://github.com/lundog/signal-messenger-bridge-startos',
+  packageRepo:
+    'https://github.com/Start9-Community/signal-messenger-bridge-startos',
   upstreamRepo: 'https://github.com/bbernhard/signal-cli-rest-api',
   marketingUrl: 'https://github.com/bbernhard/signal-cli-rest-api',
-  donationUrl: 'https://github.com/bbernhard/signal-cli-rest-api',
+  donationUrl: null,
   description: { short, long },
   // `startos` is deliberately mountless: it carries package-owned state that
   // nothing inside the container should read. See fileModels/store.json.ts.

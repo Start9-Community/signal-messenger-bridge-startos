@@ -23,9 +23,9 @@ curl -fsSL "https://hub.docker.com/v2/repositories/bbernhard/signal-cli-rest-api
 Prefer a stable tag, and do not ship a `-dev` pin **unless no other tag works**. This package's
 volume holds Signal identity keys, so a moving pre-release is a poor thing to stand on — but the
 rule is "prefer stable", not "stable only". `0.203-dev` is the current pin precisely because it is
-the only tag carrying the rootless/s6 image that `claimConfigDir` and the two hand-run daemons in
-`main.ts` were written against; no stable tag has it yet. When you must pin a pre-release, say so in
-the release notes and revisit on the next upstream release.
+the only tag carrying the rootless/s6 image that the ownership oneshot and `runAsInit` daemon in
+`main.ts` target; no stable tag has it yet. When you must pin a pre-release, say so in the release
+notes and revisit on the next upstream release.
 
 ## What to re-check on every bump
 
@@ -35,28 +35,22 @@ This is the one that breaks silently. Through 0.100 the image ran as root, chown
 `SIGNAL_CLI_CONFIG_DIR` on every start, then dropped privileges — controlled by `SIGNAL_CLI_UID`,
 `SIGNAL_CLI_GID`, and `SIGNAL_CLI_CHOWN_ON_STARTUP`. 0.101 merged the rootless image into master,
 declared `USER signal-api`, and **removed all three**. Nothing in the image chowns anything now, so
-`main.ts` does it (`claimConfigDir`) before the daemon starts.
+the `claim-config-dir` oneshot in `main.ts` does it before the daemon starts.
 
 If a future bump changes the uid, reintroduces a chown, or moves to a different user model, update
-`containerUid`/`containerGid` in `startos/utils.ts` and revisit whether `claimConfigDir` is still
-needed. Check the release-stage `USER` line and the `useradd` call in the upstream `Dockerfile`.
+`containerUid`/`containerGid` in `startos/utils.ts` and revisit the `claim-config-dir` oneshot in
+`main.ts`. Check the release-stage `USER` line and the `useradd` call in the upstream `Dockerfile`.
 
-**2. Did the processes behind the entrypoint change?**
+**2. Did the entrypoint or its supervised processes change?**
 
-The image's entrypoint is unusable here. 0.101 replaced `supervisor` with
-[s6-overlay](https://github.com/just-containers/s6-overlay), whose `/init` exits with
-`s6-overlay-suexec: fatal: can only run as pid 1` — a StartOS subcontainer's daemons are children of
-the runtime, never init. So `main.ts` runs what s6 would have supervised, directly.
+The daemon runs the image's s6-overlay `/init` with `runAsInit: true`, which makes it PID 1 and
+preserves upstream's service supervision. The `s6-services/` directory is therefore part of this
+package's contract. Read each `run` script at the new tag and confirm it still starts the expected
+JSON-RPC helper and REST process.
 
-That means the `s6-services/` directory is now part of this package's contract. Read each `run`
-script at the new tag and mirror any change:
-
-- `signal-json-rpc/run` → our `signal-cli` daemon (`jsonrpc2-helper`)
-- `signal-api/run` → our `signal-api` daemon (`signal-cli-rest-api -signal-cli-config …`)
-
-If upstream adds a service, adds a flag, or moves work into an s6 oneshot, we inherit none of it
-automatically. Also check the release-stage `ENV` lines: bypassing the entrypoint means image `ENV`
-may not reach our commands, so anything load-bearing is passed explicitly in `main.ts`.
+If upstream adds a service, flag, or s6 oneshot, the entrypoint picks it up automatically, but the
+package's environment and health probe may need to change. Also check the release-stage `ENV` lines;
+load-bearing values are passed explicitly from `main.ts` rather than relying on image defaults.
 
 **3. Are `MODE` and `SIGNAL_CLI_CONFIG_DIR` still honored?**
 
