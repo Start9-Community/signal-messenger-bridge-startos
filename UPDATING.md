@@ -35,7 +35,7 @@ This is the one that breaks silently. Through 0.100 the image ran as root, chown
 `SIGNAL_CLI_CONFIG_DIR` on every start, then dropped privileges — controlled by `SIGNAL_CLI_UID`,
 `SIGNAL_CLI_GID`, and `SIGNAL_CLI_CHOWN_ON_STARTUP`. 0.101 merged the rootless image into master,
 declared `USER signal-api`, and **removed all three**. Nothing in the image chowns anything now, so
-`main.ts` does it (`claimConfigDir`) before the daemon starts.
+the `claim-config-dir` oneshot in `main.ts` does it before the daemon starts.
 
 If a future bump changes the uid, reintroduces a chown, or moves to a different user model, update
 `containerUid`/`containerGid` in `startos/utils.ts` and revisit the `claim-config-dir` oneshot in

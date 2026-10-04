@@ -14,7 +14,7 @@ const dataDir = '/data'
  * signal-cli's config dir. Pinned via `SIGNAL_CLI_CONFIG_DIR` rather than
  * inherited, so the layout this package backs up can't drift upstream. A
  * subdirectory, not the volume root, so the root can stay root-owned while
- * this alone is handed to uid 1000 — see claimConfigDir in main.ts.
+ * this alone is handed to uid 1000 by the `claim-config-dir` oneshot.
  */
 export const configDir = `${dataDir}/signal-cli`
 

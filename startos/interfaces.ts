@@ -8,9 +8,7 @@ import { storeJson } from './fileModels/store.json'
  * to find the service — so treat it as a small public API.
  */
 export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
-  // Read the API keys reactively: when the API Keys action rewrites them,
-  // setupInterfaces re-runs and the OS reverse proxy picks up the new token
-  // set. No restart, and the daemon is untouched.
+  // Create/Revoke API Key updates proxy authentication without restarting the daemon.
   const apiKeys = await storeJson.read((s) => s.apiKeys).const(effects)
   const tokens = (apiKeys ?? []).map((k) => k.token)
 
