@@ -5,12 +5,9 @@ which wraps [`signal-cli`](https://github.com/AsamK/signal-cli). "Upstream" here
 this repo consumes it via `dockerTag` and does not build it. The pin lives in
 `startos/manifest/index.ts` at `images['signal-cli'].source.dockerTag`.
 
-## Release tags and image tags are different numbers
+## Release tags and image tags may be different numbers
 
-The GitHub release named **0.101** is git tag `0.101-pre`, and its image is
-`bbernhard/signal-cli-rest-api:0.203-dev`. Pre-releases use a separate numbering line
-(`0.199-dev`, `0.200-dev`, `0.202-dev`, `0.203-dev`) that does not match the release name at all.
-Stable releases are simpler — release 0.100 is image tag `0.100`.
+Pre-releases use a separate numbering line that does not match the release name at all. Stable releases are simpler — release 0.101 is git tag and image tag `0.101`.
 
 So read the release notes for the change list, but take the image tag from the sentence inside the
 release body, never from the release title. Confirm it exists before pinning:
@@ -22,10 +19,8 @@ curl -fsSL "https://hub.docker.com/v2/repositories/bbernhard/signal-cli-rest-api
 
 Prefer a stable tag, and do not ship a `-dev` pin **unless no other tag works**. This package's
 volume holds Signal identity keys, so a moving pre-release is a poor thing to stand on — but the
-rule is "prefer stable", not "stable only". `0.203-dev` is the current pin precisely because it is
-the only tag carrying the rootless/s6 image that the ownership oneshot and `runAsInit` daemon in
-`main.ts` target; no stable tag has it yet. When you must pin a pre-release, say so in the release
-notes and revisit on the next upstream release.
+rule is "prefer stable", not "stable only". When you must pin a
+pre-release, say so in the release notes and revisit on the next upstream release.
 
 ## What to re-check on every bump
 

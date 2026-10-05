@@ -21,7 +21,7 @@ export const manifest = setupManifest({
       // Pinned, not `latest`: the tag decides which signal-cli ships, and an
       // unpinned rebuild can change the API surface silently. See UPDATING.md
       // for the bump runbook.
-      source: { dockerTag: 'bbernhard/signal-cli-rest-api:0.203-dev' },
+      source: { dockerTag: 'bbernhard/signal-cli-rest-api:0.101' },
       arch: ['x86_64', 'aarch64'],
     },
   },
