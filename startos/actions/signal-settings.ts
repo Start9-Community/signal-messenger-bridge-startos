@@ -29,7 +29,7 @@ const inputSpec = InputSpec.of({
   skipMedia: Value.multiselect({
     name: i18n('Do Not Download'),
     description: i18n(
-      'Media signal-cli fetches automatically as messages arrive. Skip a kind to save disk and bandwidth. Skipping attachments means whatever consumes this API can never retrieve them — there is nothing stored to serve.',
+      'Selected kinds are not downloaded as messages arrive, which saves disk and bandwidth.\n- Attachments: files sent with received messages are not downloaded, so whatever consumes this API can never retrieve them\n- Stories: story messages are not received from Signal\n- Avatars: profile pictures from received messages are not downloaded\n- Stickers: sticker packs from received messages are not downloaded',
     ),
     default: [...SETTINGS_DEFAULTS.skipMedia],
     values: {
@@ -42,7 +42,7 @@ const inputSpec = InputSpec.of({
   trustNewIdentities: Value.select({
     name: i18n('Trust New Identities'),
     description: i18n(
-      'What to do when a contact presents a key this service has not seen. On first use matches Signal itself. Always removes the warning that a key changed, which is the signal of an intercepted conversation. Never blocks messaging with that contact until you run Trust Identity.',
+      "What happens when a contact presents a key this service has not seen.\n- On first use: a new contact's first key is trusted; a changed key blocks messaging with that contact until you run Trust Identity\n- Always: every new or changed key is trusted without verification, which hides the sign of an intercepted conversation\n- Never: every key, a new contact's first included, blocks messaging with that contact until you run Trust Identity",
     ),
     default: SETTINGS_DEFAULTS.trustNewIdentities,
     values: {
@@ -54,7 +54,7 @@ const inputSpec = InputSpec.of({
   defaultTextMode: Value.select({
     name: i18n('Default Text Mode'),
     description: i18n(
-      'How message text is interpreted when the sender does not say. Styled enables Signal formatting such as bold and italics.',
+      'Applies when a client sends a message without choosing a text mode.\n- Normal: the text is sent exactly as written\n- Styled: formatting markers in the text become Signal formatting such as bold and italics',
     ),
     default: SETTINGS_DEFAULTS.defaultTextMode,
     values: {
@@ -65,7 +65,7 @@ const inputSpec = InputSpec.of({
   logLevel: Value.select({
     name: i18n('Log Level'),
     description: i18n(
-      'How much the container writes to the service log. Debug is for diagnosing a problem; it is verbose and can include message metadata.',
+      'How much the container writes to the service log.\n- Debug: for diagnosing a problem; verbose, and can include message metadata\n- Info: normal operation\n- Warn: warnings and errors only\n- Error: errors only',
     ),
     default: SETTINGS_DEFAULTS.logLevel,
     values: {

@@ -12,12 +12,29 @@ admin credentials", "expose a web UI") to the constructs, the reference pages, a
 package to copy. Find the recipe before you read this package's neighbours: a package you reach by
 grepping may be non-conformant, and the recipe outranks it.
 
-Work this package's `TODO.md` from top to bottom. Keep `README.md` (technical reference for an AI support or administering agent) and `instructions.md` (end-user docs) in sync with your changes.
+Freshly scaffolded? Work the
+[New Package Checklist](../start-technologies/projects/start-sdk/docs/src/new-package-checklist.md)
+(or <https://docs.start9.com/packaging/new-package-checklist.html>) from top to bottom. It is a
+guide page, not a file in this repo — read it, don't copy it in.
+
+Keep `README.md` (technical reference for an AI support or administering agent) and
+`instructions.md` (end-user docs) in sync with your changes. This file restates neither:
+whoever changes the package has both, so it carries only what they don't — repo mechanics,
+a change that looks right and is not, where the next thing gets added, a naming trap, a
+build or test invocation particular to this repo.
+
+**Fix a defect you spot rather than reporting it** — you have the package open and the
+context to be sure. File **a GitHub issue on this repo** only when the call isn't yours to
+make: you can't pin the cause down, two defensible fixes exist, or it's too large to ride on
+the work in hand. An open issue is a report, not a queue — implement one when you're asked
+to or when it's labelled `Approved`, then close it with `Closes #<n>`.
+
+Don't record work in the repo instead: no `TODO.md`, no `NOTES.md`, no `PLAN.md`. What you
+verified, tried, and decided belongs in the commit message and the PR body.
 
 ## This repo
 
-- Package id is `signal-messenger-bridge`; the `api` interface and standalone `api` health-check ids are dependent-facing contracts.
-- Keep `MODE=json-rpc`; the realtime receive stream depends on its resident `signal-cli` daemon.
-- Never set `AUTO_RECEIVE_SCHEDULE` or `SIGNAL_CLI_CMD_TIMEOUT` in json-rpc mode; upstream treats either as a fatal configuration error.
-- The image runs as uid/gid 1000, so the ownership oneshot must precede the daemon.
-- Check the image's s6 services, runtime user, and environment variables on every bump; `UPDATING.md` contains the runbook.
+- Don't rename the `api` interface or the `api` health check; dependents resolve both by id.
+- Keep `MODE=json-rpc`, and never set `AUTO_RECEIVE_SCHEDULE` or `SIGNAL_CLI_CMD_TIMEOUT`: upstream treats either as a fatal configuration error in json-rpc mode.
+- Keep the `claim-config-dir` oneshot ahead of the daemon; the image runs as uid/gid 1000 and nothing else hands it the config dir.
+- On every image bump, work the checks in `UPDATING.md` (s6 services, runtime user, environment).

@@ -79,14 +79,16 @@ const inputSpec = InputSpec.of({
       description: i18n(
         'A contact signal-cli knows, and how far it is trusted today. Contacts appear here once you have exchanged a message. An UNTRUSTED key blocks messaging with that contact until it is trusted.',
       ),
-      default: Object.keys(values)[0]!,
+      default: null,
       values,
       disabled: false,
     }
   }),
   how: Value.union({
     name: i18n('How to Trust'),
-    description: null,
+    description: i18n(
+      '- Verified safety number: signal-cli trusts the key only if the number you enter matches it, so a mistyped or stale number is rejected\n- Trust all known keys — no verification: trusts every key signal-cli holds for this contact without checking it',
+    ),
     warning: null,
     default: 'safety-number',
     variants: Variants.of({
