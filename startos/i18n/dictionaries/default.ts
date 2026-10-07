@@ -18,15 +18,10 @@ const dict = {
   'Danger Zone': 101,
 
   // api-keys action
-  'API Keys': 6,
-  'Manage the bearer tokens that gate outside access to the Signal API.': 7,
-  'Bearer tokens that grant outside access to the Signal API. Add one per client; delete to revoke. On-box services connect directly and never need a key.': 8,
+  // 6-8 and 12-14 retired with the old API Keys action.
   Label: 9,
-  'A name to identify this key (e.g. the client it belongs to).': 10,
+  'Identifies this key in Revoke API Key. Name it after the client that will use it; each label must be unique.': 10,
   Token: 11,
-  'Leave blank when adding a key and one is generated for you. Keep it secret.': 12,
-  'API Keys Saved': 13,
-  'Outside clients authenticate with the header: Authorization: Bearer <token>': 14,
 
   // link-signal-account action
   // 15 retired: the action was renamed from "Link Device". Replaced by 98.
@@ -70,22 +65,22 @@ const dict = {
   'Signal Settings': 45,
   'Advanced service settings.': 46,
   'Do Not Download': 47,
-  'Media signal-cli fetches automatically as messages arrive. Skip a kind to save disk and bandwidth. Skipping attachments means whatever consumes this API can never retrieve them — there is nothing stored to serve.': 48,
+  'Selected kinds are not downloaded as messages arrive, which saves disk and bandwidth.\n- Attachments: files sent with received messages are not downloaded, so whatever consumes this API can never retrieve them\n- Stories: story messages are not received from Signal\n- Avatars: profile pictures from received messages are not downloaded\n- Stickers: sticker packs from received messages are not downloaded': 48,
   Attachments: 49,
   Stories: 50,
   Avatars: 51,
   Stickers: 52,
   'Trust New Identities': 53,
-  'What to do when a contact presents a key this service has not seen. On first use matches Signal itself. Always removes the warning that a key changed, which is the signal of an intercepted conversation. Never blocks messaging with that contact until you run Trust Identity.': 54,
+  "What happens when a contact presents a key this service has not seen.\n- On first use: a new contact's first key is trusted; a changed key blocks messaging with that contact until you run Trust Identity\n- Always: every new or changed key is trusted without verification, which hides the sign of an intercepted conversation\n- Never: every key, a new contact's first included, blocks messaging with that contact until you run Trust Identity": 54,
   'On first use (recommended)': 55,
   Always: 56,
   'Never — trust each contact by hand': 57,
   'Default Text Mode': 58,
-  'How message text is interpreted when the sender does not say. Styled enables Signal formatting such as bold and italics.': 59,
+  'Applies when a client sends a message without choosing a text mode.\n- Normal: the text is sent exactly as written\n- Styled: formatting markers in the text become Signal formatting such as bold and italics': 59,
   Normal: 60,
   Styled: 61,
   'Log Level': 62,
-  'How much the container writes to the service log. Debug is for diagnosing a problem; it is verbose and can include message metadata.': 63,
+  'How much the container writes to the service log.\n- Debug: for diagnosing a problem; verbose, and can include message metadata\n- Info: normal operation\n- Warn: warnings and errors only\n- Error: errors only': 63,
   Debug: 64,
   Info: 65,
   Warn: 66,
@@ -147,7 +142,7 @@ const dict = {
   'Stop an outside client from using the Signal API.': 116,
   'No API keys to revoke': 117,
   'API Key': 118,
-  'Select the key to revoke.': 119,
+  'Keys are listed by label. The client using the selected key loses access immediately; create its replacement first when rotating credentials.': 119,
   'Nothing to Revoke': 120,
   'This service has no API keys.': 121,
   'The selected API key no longer exists.': 122,
@@ -160,6 +155,7 @@ const dict = {
   'Signal API returned a non-JSON response': 127,
   'The Signal API returned no device link.': 128,
   'The label must contain a visible character.': 129,
+  '- Verified safety number: signal-cli trusts the key only if the number you enter matches it, so a mistyped or stale number is rejected\n- Trust all known keys — no verification: trusts every key signal-cli holds for this contact without checking it': 130,
 } as const
 
 /**

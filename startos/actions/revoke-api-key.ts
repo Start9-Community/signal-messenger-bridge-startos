@@ -28,8 +28,10 @@ export const revokeApiKey = sdk.Action.withInput(
 
       return {
         name: i18n('API Key'),
-        description: i18n('Select the key to revoke.'),
-        default: Object.keys(values)[0]!,
+        description: i18n(
+          'Keys are listed by label. The client using the selected key loses access immediately; create its replacement first when rotating credentials.',
+        ),
+        default: null,
         values,
         disabled: false,
       }

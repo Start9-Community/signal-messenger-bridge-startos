@@ -21,7 +21,7 @@ export const createApiKey = sdk.Action.withInput(
     label: Value.text({
       name: i18n('Label'),
       description: i18n(
-        'A name to identify this key (e.g. the client it belongs to).',
+        'Identifies this key in Revoke API Key. Name it after the client that will use it; each label must be unique.',
       ),
       required: true,
       default: null,
