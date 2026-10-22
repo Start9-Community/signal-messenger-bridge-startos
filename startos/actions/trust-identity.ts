@@ -177,6 +177,7 @@ export const trustIdentityAction = sdk.Action.withInput(
         copyable: true,
         qr: false,
         masked: false,
+        launchable: false,
       } satisfies T.ActionResultMember,
     }
   },

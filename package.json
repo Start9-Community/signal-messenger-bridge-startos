@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Signal Messenger Bridge for StartOS - exposes the Signal network over a token-authenticated REST/WebSocket API for OpenClaw and other services",
   "dependencies": {
-    "@start9labs/start-sdk": "3.0.3"
+    "@start9labs/start-sdk": "3.1.0"
   },
   "overrides": {
     "@start9labs/start-sdk": "$@start9labs/start-sdk"

@@ -47,6 +47,7 @@ export const versionInfo = sdk.Action.withoutInput(
         copyable: true,
         qr: false,
         masked: false,
+        launchable: false,
       },
       {
         type: 'single',
@@ -58,6 +59,7 @@ export const versionInfo = sdk.Action.withoutInput(
         copyable: false,
         qr: false,
         masked: false,
+        launchable: false,
       },
       {
         type: 'single',
@@ -67,6 +69,7 @@ export const versionInfo = sdk.Action.withoutInput(
         copyable: false,
         qr: false,
         masked: false,
+        launchable: false,
       },
     ]
 
@@ -79,6 +82,7 @@ export const versionInfo = sdk.Action.withoutInput(
         copyable: false,
         qr: false,
         masked: false,
+        launchable: false,
       })
     }
 
@@ -102,6 +106,7 @@ export const versionInfo = sdk.Action.withoutInput(
           copyable: false,
           qr: false,
           masked: false,
+          launchable: false,
         })),
       })
     }

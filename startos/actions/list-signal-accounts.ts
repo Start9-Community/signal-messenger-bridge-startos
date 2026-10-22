@@ -61,6 +61,7 @@ function identityMember(identity: Identity): T.ActionResultMember {
     copyable: !!identity.safetyNumber,
     qr: false,
     masked: false,
+    launchable: false,
   }
 }
 
@@ -78,6 +79,7 @@ function deviceMember(device: LinkedDevice): T.ActionResultMember {
     copyable: false,
     qr: false,
     masked: false,
+    launchable: false,
   }
 }
 
@@ -128,6 +130,7 @@ export const listSignalAccountsAction = sdk.Action.withoutInput(
           copyable: true,
           qr: false,
           masked: false,
+          launchable: false,
         },
       ]
 
@@ -152,6 +155,7 @@ export const listSignalAccountsAction = sdk.Action.withoutInput(
           copyable: false,
           qr: false,
           masked: false,
+          launchable: false,
         })
       }
 
@@ -179,6 +183,7 @@ export const listSignalAccountsAction = sdk.Action.withoutInput(
                   copyable: false,
                   qr: false,
                   masked: false,
+                  launchable: false,
                 },
               ],
         })
@@ -193,6 +198,7 @@ export const listSignalAccountsAction = sdk.Action.withoutInput(
           copyable: false,
           qr: false,
           masked: false,
+          launchable: false,
         })
       }
 
