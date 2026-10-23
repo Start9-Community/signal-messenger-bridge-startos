@@ -74,6 +74,7 @@ export const linkSignalAccount = sdk.Action.withInput(
         // The URI grants device access to the account, so keep it hidden until
         // the operator chooses to reveal it.
         masked: true,
+        launchable: false,
       },
     }
   },
