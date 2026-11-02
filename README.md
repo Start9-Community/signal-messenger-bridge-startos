@@ -46,12 +46,13 @@ The service separates upstream Signal state from StartOS-owned configuration and
 | --- | --- | --- |
 | `main` | `/data` | Signal identity keys, contacts, identities, attachments, and message data under `/data/signal-cli` |
 | `startos` | Not mounted | `store.json`, including API-key records and launch settings |
+| `public` | Not mounted | `credentials.json` with the key dependent services send; they mount it read-only |
 
 Keeping `startos` mountless prevents the upstream application from reading the bearer tokens enforced by the StartOS proxy.
 
 ## File Models
 
-The package owns one JSON file model, `store.json`, on the mountless `startos` volume. It stores bearer-token records and the settings that are translated into container environment variables.
+The package owns two JSON file models. `store.json`, on the mountless `startos` volume, stores bearer-token records and the settings that are translated into container environment variables. `credentials.json`, on the `public` volume, holds one key, `apiKey`: the bearer token for dependent StartOS services. Init generates it whenever it is missing.
 
 The **Create API Key**, **Revoke API Key**, and **Signal Settings** actions are the only normal writers. API-key changes are watched by `setupInterfaces` and update proxy authentication without restarting the service. Settings are read once when the daemon specification is built; the settings action explicitly restarts a running service only when the resulting environment changes.
 
@@ -63,17 +64,17 @@ None. The package can run independently, while other services may depend on its 
 
 ## Network Access and Interfaces
 
-The package exports one `api` interface on port 8080 for both REST and WebSocket traffic. The upstream image has no authentication, so the TLS proxy leg requires a bearer token before traffic reaches the application.
+The package exports one `api` interface on port 8080 for both REST and WebSocket traffic. The upstream image has no authentication, so StartOS requires a bearer token on every address of the interface — the plaintext bridge address other services use included — before traffic reaches the application.
 
-Outside clients send `Authorization: Bearer <token>`. Same-box dependents should resolve the interface binding with `sdk.host.getBridgeAddress(..., { ssl: false })`; that plaintext bridge leg bypasses the TLS proxy and therefore needs no bearer token. They must not hardcode the internal port or a `.startos` hostname.
+Every client sends `Authorization: Bearer <token>`. The proxy accepts the tokens from **Create API Key** and the `apiKey` published in `public/credentials.json`. A client configured by hand, including one running on this server such as OpenClaw's Signal channel, uses a key from **Create API Key**. A StartOS package that depends on this one resolves the binding with `sdk.host.getBridgeAddress(..., { hostId: apiHostId, internalPort: port, ssl: false })`, importing both from `startos/utils.ts`, and reads the published key by mounting the `public` volume read-only. It must not hardcode the internal port or a `.startos` hostname.
 
-Adding or revoking a key rebinds the proxy in place. An empty token list intentionally rejects all outside requests while leaving same-box dependency traffic available.
+Adding or revoking a key rebinds the proxy in place.
 
 ## Installation and First-Run Flow
 
-A fresh install starts locked to outside API clients and unlinked from Signal. Starting the service creates and claims the Signal config directory, launches the upstream s6 service tree, and becomes healthy once the account-list endpoint answers.
+A fresh install starts locked to every API client but its dependents and unlinked from Signal. Starting the service creates and claims the Signal config directory, launches the upstream s6 service tree, and becomes healthy once the account-list endpoint answers.
 
-To make the service useful, link it as a secondary device to an existing Signal account. Create an API key only for software connecting through an address shown on the interface; same-box dependents do not need one.
+To make the service useful, link it as a secondary device to an existing Signal account. Create an API key for every client you configure by hand, including one on this server. StartOS services that depend on this one read the published key themselves.
 
 ## Actions
 
@@ -81,7 +82,7 @@ The package exposes setup, credential, configuration, diagnostic, and destructiv
 
 ### Create API Key
 
-Run this before giving an outside client access. It appends a newly generated token to `store.json`, updates the proxy immediately without a service restart, and returns the token once as a masked, copyable value. Repeating it with another label safely creates an independent credential; labels must be unique.
+Run this before giving a hand-configured client access, on this server or elsewhere. It appends a newly generated token to `store.json`, updates the proxy immediately without a service restart, and returns the token once as a masked, copyable value. Repeating it with another label safely creates an independent credential; labels must be unique.
 
 ### Link Signal Account
 
@@ -93,7 +94,7 @@ Use this to confirm linking, find the account number a client needs, inspect lin
 
 ### Revoke API Key
 
-Run this when an outside client should lose access. It removes every stored key with the selected label and updates the proxy immediately without restarting the service. A key already removed produces no state change.
+Run this when a hand-configured client should lose access. It removes every stored key with the selected label and updates the proxy immediately without restarting the service. A key already removed produces no state change.
 
 ### Signal Settings
 
@@ -123,9 +124,9 @@ During startup, a failure normally means the JVM-backed Signal daemon is still i
 
 ## Backups and Restore
 
-Backups copy both volumes wholesale while the service is stopped. This preserves the Signal identity and application data from `main` together with the proxy credentials and launch settings from `startos`.
+Backups copy all three volumes wholesale while the service is stopped. This preserves the Signal identity and application data from `main` together with the proxy credentials and launch settings from `startos` and the dependents' key from `public`.
 
-A restore reinstates the package and both volumes at their backed-up version and leaves the service stopped. Start it after restore; no relinking or credential recreation should be necessary. Losing `main` requires linking a new device, while restoring `main` without `startos` would lose the corresponding outside-client credentials.
+A restore reinstates the package and its volumes at their backed-up version and leaves the service stopped. Start it after restore; no relinking or credential recreation should be necessary. Losing `main` requires linking a new device, while restoring `main` without `startos` would lose the corresponding outside-client credentials.
 
 ## Limitations and Differences
 
@@ -148,8 +149,10 @@ subcontainers: [signal-cli-sub]
 volumes:
   main: /data
   startos: null
+  public: null # credentials.json, read by dependents
 file_models:
   - store.json
+  - credentials.json
 startos_managed_env_vars:
   - MODE
   - SIGNAL_CLI_CONFIG_DIR

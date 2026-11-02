@@ -1,6 +1,7 @@
 import { sdk } from './sdk'
 import { i18n } from './i18n'
-import { port } from './utils'
+import { apiHostId, port } from './utils'
+import { credentialsJson } from './fileModels/credentials.json'
 import { storeJson } from './fileModels/store.json'
 
 /**
@@ -10,15 +11,21 @@ import { storeJson } from './fileModels/store.json'
 export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   // Create/Revoke API Key updates proxy authentication without restarting the daemon.
   const apiKeys = await storeJson.read((s) => s.apiKeys).const(effects)
-  const tokens = (apiKeys ?? []).map((k) => k.token)
+  const dependentKey = await credentialsJson
+    .read((c) => c.apiKey)
+    .const(effects)
+  const tokens = [
+    ...(dependentKey ? [dependentKey] : []),
+    ...(apiKeys ?? []).map((k) => k.token),
+  ]
 
-  const lanMulti = sdk.MultiHost.of(effects, 'main')
+  const lanMulti = sdk.MultiHost.of(effects, apiHostId)
   const lanOrigin = await lanMulti.bindPort(port, {
     protocol: 'http',
     // The upstream image ships no authentication of any kind, so this gate is
     // the only thing between the network and full control of the linked Signal
-    // account. Same-box dependents resolve the binding's plaintext bridge leg,
-    // which does not traverse this TLS proxy.
+    // account. StartOS enforces it on the plaintext bridge address too, so
+    // dependents send the key published on the `public` volume.
     addSsl: {
       auth: { type: 'bearer', tokens, realm: 'Signal Messenger Bridge' },
     },

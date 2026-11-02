@@ -7,6 +7,9 @@ import { sdk } from './sdk'
  */
 export const port = 8080
 
+/** The `api` interface's host, for dependents resolving its bridge address. */
+export const apiHostId = 'main'
+
 /** Where the `main` volume is mounted. */
 const dataDir = '/data'
 

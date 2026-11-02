@@ -6,9 +6,8 @@ import { port } from './utils'
  * Minimal HTTP client for the signal-cli-rest-api container.
  *
  * Dials the container's own address directly, which is what lets this package
- * skip the bearer token: the API keys on the `startos` volume gate the reverse
- * proxy, and traffic that never traverses the proxy is never challenged. That
- * is the same reason an on-box dependent needs no key (see the README).
+ * skip the bearer token: the proxy gates the interface's addresses, and traffic
+ * to the container itself never traverses it.
  *
  * The image ships no authentication of its own, so anything that reaches port
  * 8080 has full control of the linked account. Nothing here should ever be
