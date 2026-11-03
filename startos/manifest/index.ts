@@ -15,7 +15,7 @@ export const manifest = setupManifest({
   description: { short, long },
   // `startos` is deliberately mountless: it carries package-owned state that
   // nothing inside the container should read. See fileModels/store.json.ts.
-  volumes: ['main', 'startos'],
+  volumes: ['main', 'startos', 'public'],
   images: {
     'signal-cli': {
       // Pinned, not `latest`: the tag decides which signal-cli ships, and an

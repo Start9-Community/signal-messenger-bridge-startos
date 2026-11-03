@@ -4,10 +4,12 @@ import { versionGraph } from '../versions'
 import { setInterfaces } from '../interfaces'
 import { actions } from '../actions'
 import { dependencies } from '../dependencies'
+import { initializeService } from './initializeService'
 
 export const init = sdk.setupInit(
   restoreInit,
   versionGraph,
+  initializeService,
   setInterfaces,
   actions,
   dependencies,

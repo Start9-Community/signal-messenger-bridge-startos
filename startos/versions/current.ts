@@ -1,63 +1,23 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.101:0',
+  version: '0.101:1',
   releaseNotes: {
-    en_US: `Release for the Community Registry.
+    en_US: `Fixes clients on this server, such as OpenClaw's Signal channel, that StartOS 0.4.1 started rejecting.
 
-- Runs the Signal client headless and exposes it over a REST and WebSocket API.
-- Join Signal by linking the service to an existing account as a secondary device, the same way Signal Desktop does.
-- API access is gated by bearer tokens created and revoked from StartOS actions.
-- Updates to signal-cli-rest-api 0.101 (stable), signal-cli 0.14.8, and start-sdk 3.1.0.
-- Back up before updating: signal-cli upgrades the account database from schema 30 to 31. Returning to the previous version requires restoring a pre-update backup.
-- [Upstream release notes](https://github.com/bbernhard/signal-cli-rest-api/releases/tag/0.101).
-- Revoke API Key and Trust Identity start with no key or contact selected.
-- Signal Settings describes each choice for Do Not Download, Trust New Identities, Default Text Mode and Log Level.
-- Trust Identity describes both ways to trust a key.`,
-    es_ES: `Versión para el Registro Comunitario.
+Every client now needs an API key, including one on the same server. If you connected a client here without one, run Create API Key and add the token to that client. StartOS services that depend on Signal Messenger Bridge read their key automatically.`,
+    es_ES: `Corrige los clientes de este servidor, como el canal de Signal de OpenClaw, que StartOS 0.4.1 empezó a rechazar.
 
-- Ejecuta el cliente de Signal sin interfaz y lo expone mediante una API REST y WebSocket.
-- Únete a Signal enlazando el servicio a una cuenta existente como dispositivo secundario, igual que Signal Desktop.
-- El acceso a la API está protegido por tokens de portador creados y revocados desde acciones de StartOS.
-- Actualiza a signal-cli-rest-api 0.101 (estable), signal-cli 0.14.8 y start-sdk 3.1.0.
-- Haz una copia de seguridad antes de actualizar: signal-cli actualiza la base de datos de cuentas del esquema 30 al 31. Para volver a la versión anterior es necesario restaurar una copia de seguridad previa a la actualización.
-- [Notas de la versión del proyecto original](https://github.com/bbernhard/signal-cli-rest-api/releases/tag/0.101).
-- Revocar clave de API y Confiar en identidad empiezan sin ninguna clave ni contacto seleccionado.
-- Ajustes de Signal describe cada opción de No descargar, Confiar en identidades nuevas, Modo de texto por defecto y Nivel de registro.
-- Confiar en identidad describe las dos formas de confiar en una clave.`,
-    de_DE: `Veröffentlichung für die Community Registry.
+Ahora todo cliente necesita una clave de API, incluso en el mismo servidor. Si conectó un cliente aquí sin clave, ejecute Crear clave de API y añada el token a ese cliente. Los servicios de StartOS que dependen de Signal Messenger Bridge leen su clave automáticamente.`,
+    de_DE: `Behebt Clients auf diesem Server, etwa den Signal-Kanal von OpenClaw, die StartOS 0.4.1 abzulehnen begann.
 
-- Betreibt den Signal-Client ohne Oberfläche und stellt ihn über eine REST- und WebSocket-API bereit.
-- Tritt Signal bei, indem der Dienst wie Signal Desktop als Zweitgerät mit einem bestehenden Konto verknüpft wird.
-- Der API-Zugriff wird durch Bearer-Tokens geschützt, die über StartOS-Aktionen erstellt und widerrufen werden.
-- Aktualisiert auf signal-cli-rest-api 0.101 (stabil), signal-cli 0.14.8 und start-sdk 3.1.0.
-- Vor dem Update ein Backup erstellen: signal-cli aktualisiert die Kontodatenbank von Schema 30 auf 31. Eine Rückkehr zur vorherigen Version erfordert die Wiederherstellung eines Backups von vor dem Update.
-- [Upstream-Versionshinweise](https://github.com/bbernhard/signal-cli-rest-api/releases/tag/0.101).
-- API-Schlüssel widerrufen und Identität bestätigen beginnen ohne ausgewählten Schlüssel oder Kontakt.
-- Signal-Einstellungen beschreibt jede Option für Nicht herunterladen, Neuen Identitäten vertrauen, Standard-Textmodus und Protokollstufe.
-- Identität bestätigen beschreibt beide Wege, einem Schlüssel zu vertrauen.`,
-    pl_PL: `Wydanie dla Rejestru Społeczności.
+Jeder Client braucht jetzt einen API-Schlüssel, auch auf demselben Server. Wenn Sie hier einen Client ohne Schlüssel verbunden haben, führen Sie „API-Schlüssel erstellen“ aus und tragen Sie das Token in diesem Client ein. StartOS-Dienste, die von Signal Messenger Bridge abhängen, lesen ihren Schlüssel automatisch.`,
+    pl_PL: `Naprawia klientów na tym serwerze, takich jak kanał Signal w OpenClaw, które StartOS 0.4.1 zaczął odrzucać.
 
-- Uruchamia klienta Signal bez interfejsu i udostępnia go przez API REST i WebSocket.
-- Dołącz do Signal, łącząc usługę z istniejącym kontem jako urządzenie dodatkowe, tak jak Signal Desktop.
-- Dostęp do API jest chroniony tokenami bearer tworzonymi i unieważnianymi za pomocą akcji StartOS.
-- Aktualizacja do signal-cli-rest-api 0.101 (wersja stabilna), signal-cli 0.14.8 i start-sdk 3.1.0.
-- Przed aktualizacją wykonaj kopię zapasową: signal-cli aktualizuje bazę danych kont ze schematu 30 do 31. Powrót do poprzedniej wersji wymaga przywrócenia kopii zapasowej sprzed aktualizacji.
-- [Informacje o wydaniu projektu źródłowego](https://github.com/bbernhard/signal-cli-rest-api/releases/tag/0.101).
-- Unieważnij klucz API i Zaufaj tożsamości zaczynają bez wybranego klucza ani kontaktu.
-- Ustawienia Signal opisują każdą opcję pól Nie pobieraj, Zaufanie nowym tożsamościom, Domyślny tryb tekstu i Poziom logowania.
-- Zaufaj tożsamości opisuje oba sposoby zaufania kluczowi.`,
-    fr_FR: `Version destinée au registre communautaire.
+Każdy klient potrzebuje teraz klucza API, także na tym samym serwerze. Jeśli podłączono tu klienta bez klucza, uruchom Utwórz klucz API i dodaj token do tego klienta. Usługi StartOS zależne od Signal Messenger Bridge odczytują swój klucz automatycznie.`,
+    fr_FR: `Corrige les clients de ce serveur, comme le canal Signal d’OpenClaw, que StartOS 0.4.1 a commencé à refuser.
 
-- Exécute le client Signal sans interface et l'expose via une API REST et WebSocket.
-- Rejoignez Signal en liant le service à un compte existant en tant qu'appareil secondaire, comme Signal Desktop.
-- L'accès à l'API est protégé par des jetons bearer créés et révoqués depuis des actions StartOS.
-- Met à jour signal-cli-rest-api vers la version 0.101 (stable), signal-cli vers 0.14.8 et start-sdk vers 3.1.0.
-- Effectuez une sauvegarde avant la mise à jour : signal-cli fait passer la base de données des comptes du schéma 30 au schéma 31. Revenir à la version précédente nécessite de restaurer une sauvegarde antérieure à la mise à jour.
-- [Notes de version du projet amont](https://github.com/bbernhard/signal-cli-rest-api/releases/tag/0.101).
-- Révoquer une clé API et Faire confiance à une identité démarrent sans clé ni contact sélectionné.
-- Paramètres Signal décrit chaque choix de Ne pas télécharger, Faire confiance aux nouvelles identités, Mode de texte par défaut et Niveau de journalisation.
-- Faire confiance à une identité décrit les deux façons de faire confiance à une clé.`,
+Tout client a désormais besoin d’une clé API, même sur le même serveur. Si vous avez connecté ici un client sans clé, exécutez Créer une clé API et ajoutez le jeton à ce client. Les services StartOS qui dépendent de Signal Messenger Bridge lisent leur clé automatiquement.`,
   },
   migrations: {
     up: async ({ effects }) => {},

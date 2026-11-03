@@ -14,7 +14,7 @@ This service has no human chat interface. Your own software drives it through a 
 - Bearer-token access for clients connecting through the API interface.
 - Actions for linking an account, managing client access, changing advanced settings, trusting changed contact keys, and inspecting the running service.
 
-Services on the same StartOS server connect through the package dependency and do not need an API key.
+StartOS services that depend on Signal Messenger Bridge read their key automatically. A client you configure by hand needs an API key, even on the same server.
 
 ## Choosing an account
 
@@ -31,7 +31,7 @@ This service does not register numbers. Signal registration requires a captcha o
 2. Run **Link Signal Account**, choose the device name that should appear in Signal, and leave the result open.
 3. On the phone holding the account, open Signal → Settings → Linked devices → Link new device, then scan the QR code.
 4. Run **List Signal Accounts** to confirm the link and copy the account number your client will use.
-5. If the client connects through the **API** interface, run **Create API Key** and copy the returned token. The token is shown only when created.
+5. Unless the client is a StartOS service that depends on Signal Messenger Bridge, run **Create API Key** and copy the returned token. The token is shown only when created.
 6. Give the client the API interface address and send the token as `Authorization: Bearer <token>` on every request, including WebSocket upgrades.
 
 The device link is single-use and expires quickly. Run **Link Signal Account** again for a fresh one, and treat every unredeemed link as a credential.
@@ -57,7 +57,7 @@ Attachments cross the API rather than a shared folder: include outbound files as
 
 ## Actions
 
-- **Create API Key** generates access for one outside client. Copy the token immediately; it is not shown again.
+- **Create API Key** generates access for one client you configure by hand. Copy the token immediately; it is not shown again.
 - **Revoke API Key** immediately removes a client's access. Create a replacement first when rotating credentials without downtime.
 - **Link Signal Account** produces a short-lived QR code for adding this service as a secondary device.
 - **List Signal Accounts** shows linked numbers, devices, and contact trust states.
