@@ -26,11 +26,8 @@ pre-release, say so in the release notes and revisit on the next upstream releas
 
 **1. Does the container still start as uid 1000, and does anything still chown for us?**
 
-This is the one that breaks silently. Through 0.100 the image ran as root, chowned
-`SIGNAL_CLI_CONFIG_DIR` on every start, then dropped privileges — controlled by `SIGNAL_CLI_UID`,
-`SIGNAL_CLI_GID`, and `SIGNAL_CLI_CHOWN_ON_STARTUP`. 0.101 merged the rootless image into master,
-declared `USER signal-api`, and **removed all three**. Nothing in the image chowns anything now, so
-the `claim-config-dir` oneshot in `main.ts` does it before the daemon starts.
+This is the one that breaks silently. The image declares `USER signal-api` and nothing in it chowns
+`SIGNAL_CLI_CONFIG_DIR`, so the `claim-config-dir` oneshot in `main.ts` does it before the daemon starts.
 
 If a future bump changes the uid, reintroduces a chown, or moves to a different user model, update
 `containerUid`/`containerGid` in `startos/utils.ts` and revisit the `claim-config-dir` oneshot in
@@ -76,6 +73,3 @@ The Version Info action surfaces `version`, `mode`, and per-endpoint `capabiliti
 
 1. Update `dockerTag` in `startos/manifest/index.ts`.
 2. Work through the five checks above; fix anything they surface before building.
-3. Bump `version` and write `releaseNotes` in `startos/versions/current.ts` (all five locales).
-4. Build, sideload, and **verify the service starts and `List Signal Accounts` still lists the linked
-   account** — a permissions or entrypoint regression looks exactly like a broken link.
