@@ -90,3 +90,7 @@ Deleting local data does not remove the secondary device from Signal's linked-de
 - Account registration is unavailable; link an account already registered on a phone.
 - Unlinking is performed from the primary Signal app.
 - Deleting the Signal account itself is intentionally unavailable because it is irreversible.
+
+## JVM security mitigation
+
+The package disables JVM Base64 intrinsics to mitigate CVE-2026-114938 on affected AVX-512 x86 CPUs. ARM64 is unaffected; exploitation through Signal Messenger Bridge has not been verified. Existing JVM options and Signal data remain unchanged.
