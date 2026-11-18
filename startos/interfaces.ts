@@ -26,7 +26,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     // the only thing between the network and full control of the linked Signal
     // account. StartOS enforces it on the plaintext bridge address too, so
     // dependents send the key published on the `public` volume.
-    addSsl: {
+    proxy: {
       auth: { type: 'bearer', tokens, realm: 'Signal Messenger Bridge' },
     },
   })
