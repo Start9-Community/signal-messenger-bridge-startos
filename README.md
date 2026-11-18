@@ -36,7 +36,7 @@ The package uses the unmodified `bbernhard/signal-cli-rest-api` image on x86_64 
 
 `MODE=json-rpc` is fixed because the realtime receive stream depends on a resident daemon. The package also fixes the API port and Signal configuration path, then passes the remaining operator-controlled settings as environment variables.
 
-`MODE=json-rpc` launches the JVM version of signal-cli, not its native executable. The package passes `-XX:-UseBASE64Intrinsics` through `JAVA_TOOL_OPTIONS`, retaining upstream `JAVA_OPTS`, signal-cli defaults and s6 supervision. This mitigates CVE-2026-114938 on affected AVX-512 x86 CPUs; ARM64 is unaffected and application-specific exploitability is unverified.
+`MODE=json-rpc` runs signal-cli on the JVM rather than its native build. The package sets `JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics` to mitigate Java4Shell (CVE-2026-114938) on affected x86-64 CPUs with AVX-512 VBMI; ARM64 is unaffected.
 
 The image runs as uid/gid 1000. A root oneshot creates `/data/signal-cli` and repairs its ownership before the image starts; the volume root remains root-owned.
 

@@ -7,8 +7,5 @@
   },
   "overrides": {
     "@start9labs/start-sdk": "$@start9labs/start-sdk"
-  },
-  "scripts": {
-    "test": "node --test tests/*.test.cjs"
   }
 }

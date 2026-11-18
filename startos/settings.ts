@@ -30,14 +30,7 @@ export async function readSettings(): Promise<SignalSettings> {
   return { ...SETTINGS_DEFAULTS, ...(store?.settings ?? {}) }
 }
 
-/**
- * The environment both container processes launch with.
- *
- * Passed explicitly rather than inherited: the image's entrypoint is bypassed
- * (see main.ts), so its own `ENV` lines may not reach our commands. Anything
- * upstream gives a meaning to has to be added here — check the release-stage
- * `ENV` on every image bump.
- */
+/** The environment shared by ownership setup and the supervised daemon. */
 export function computeStartEnv(
   settings: SignalSettings,
 ): Record<string, string> {
@@ -47,11 +40,12 @@ export function computeStartEnv(
     // modes spawn a process per request and can only poll. `jsonrpc2-helper`
     // rejects anything but json-rpc/json-rpc-native outright.
     MODE: 'json-rpc',
+    // Mitigates CVE-2026-114938 (Java4Shell) until the image's JRE is patched.
+    JAVA_TOOL_OPTIONS: '-XX:-UseBASE64Intrinsics',
     // Pin the config dir rather than inheriting the image default, so the
     // volume layout this package backs up can't drift upstream.
     SIGNAL_CLI_CONFIG_DIR: configDir,
-    // Pass the port explicitly rather than relying on the image's ENV reaching
-    // a command that isn't the entrypoint; interfaces.ts binds this same value.
+    // The upstream listener and the API binding must use the same port.
     PORT: String(port),
     // In json-rpc mode this is the only way to set the trust policy: the REST
     // endpoint for it (POST /v1/configuration/{number}/settings) returns "Not

@@ -13,11 +13,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     mainMounts,
     'signal-cli-sub',
   )
-  const env = {
-    ...computeStartEnv(await readSettings()),
-    // json-rpc runs a JVM; retain upstream JAVA_OPTS and supervisor inheritance.
-    JAVA_TOOL_OPTIONS: '-XX:-UseBASE64Intrinsics',
-  }
+  const env = computeStartEnv(await readSettings())
 
   return sdk.Daemons.of(effects)
     .addOneshot('claim-config-dir', {

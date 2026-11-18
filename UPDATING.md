@@ -42,7 +42,7 @@ JSON-RPC helper and REST process.
 
 If upstream adds a service, flag, or s6 oneshot, the entrypoint picks it up automatically, but the
 package's environment and health probe may need to change. Also check the release-stage `ENV` lines;
-load-bearing values are passed explicitly from `main.ts` rather than relying on image defaults.
+load-bearing values are composed by `computeStartEnv` in `startos/settings.ts` and passed to both ownership setup and the daemon.
 
 **3. Are `MODE` and `SIGNAL_CLI_CONFIG_DIR` still honored?**
 
@@ -57,6 +57,8 @@ Read `SIGNAL_CLI_VERSION` and `LIBSIGNAL_CLIENT_VERSION` from the upstream `Dock
 signal-cli migrates its database forward and does not migrate back, so a large jump means the
 downgrade path is one-way. Decide `migrations.down` in `startos/versions/current.ts` deliberately
 rather than inheriting it, and say so in the release notes if a rollback needs a restore.
+
+Keep the Java4Shell override in `computeStartEnv` until the packaged image's actual JRE is verified patched for CVE-2026-114938. A new image tag alone does not establish that.
 
 **5. Did the REST surface change under us?**
 
